@@ -5,7 +5,7 @@
 #ifndef MATHIC_COMMON_REFERENCE_STRING_H_
 #define MATHIC_COMMON_REFERENCE_STRING_H_
 
-#include "mathic/common/Reference.h"ù
+#include "mathic/common/Reference.h"
 
 #include <string>
 
@@ -35,6 +35,14 @@ namespace Mathic
         inline ReferenceString(std::string &str) :
             _size(str.size()), Reference<char>(str.c_str())
         {
+        }
+
+        // Fields
+
+        static inline auto getEmpty()
+            -> ReferenceString
+        {
+            return ReferenceString((char *const)nullptr);
         }
 
         // Methods

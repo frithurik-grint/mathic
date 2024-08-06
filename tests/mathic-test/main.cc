@@ -7,5 +7,4 @@ using namespace Mathic;
 
 int main()
 {
-    return 0;
 }

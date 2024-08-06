@@ -37,14 +37,14 @@ namespace Mathic
 
         // Operators
 
-        inline auto &operator=(const UniqueReference &that)
-            -> UniqueReference
+        inline auto operator=(const UniqueReference &that)
+            -> UniqueReference &
         {
             return this->setPtr(that->getPtr()), that->setPtr(nullptr), *this;
         }
 
-        inline auto &operator=(UniqueReference &&that)
-            -> UniqueReference
+        inline auto operator=(UniqueReference &&that)
+            -> UniqueReference &
         {
             return this->setPtr(that->getPtr()), that->setPtr(nullptr), *this;
         }
