@@ -1,4 +1,5 @@
 #include "mathic/lex/SourceBuffer.h"
+//#include "mathic/lex/Tokens.h"
 
 #include <iostream>
 
@@ -6,17 +7,29 @@ using namespace Mathic;
 
 int main()
 {
-    SourceBuffer src("test", "a = 1 + 4", 10);
+    const char *const tags[] =
+    {
+#pragma push_macro("_DefineLexeme")
 
-    char c;
+#ifndef _DefineLexeme
+#   define _DefineLexeme(name, text, lexeme) text,
+#endif // _DefineLexeme
 
-    do
-        std::cout << (c = src.readChar());
-    while (c);
+#include "mathic/lex/Tokens.inc"
 
-    src.advancePosition();
+#ifdef _DefineLexeme
+#   undef _DefineLexeme
+#endif // UNDEF _DefineLexeme
 
-    std::cout << std::endl << src.getColumn() << std::endl;
+#pragma pop_macro("_DefineLexeme")
+
+        NULL
+    };
+
+    char **c = (char **)tags;
+
+    while (*c)
+        std::printf("%s\n", *(c++));
 
     return 0;
 }
