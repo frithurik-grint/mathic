@@ -5,8 +5,8 @@
 #include <iostream>
 
 using namespace Mathic;
-using namespace llvm;
 
 int main()
 {
+    
 }
