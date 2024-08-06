@@ -1,4 +1,4 @@
-#include "mathic/common/SourceBuffer.h"
+#include "mathic/lex/SourceBuffer.h"
 
 #include <iostream>
 
@@ -13,6 +13,8 @@ int main()
     do
         std::cout << (c = src.readChar());
     while (c);
+
+    src.advancePosition();
 
     std::cout << std::endl << src.getColumn() << std::endl;
 

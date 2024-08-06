@@ -2,8 +2,8 @@
 
 /* MIT License - Copyright (c) 2024 Frithurik Grint */
 
-#ifndef MATHIC_COMMON_SOURCE_BUFFER_H_
-#define MATHIC_COMMON_SOURCE_BUFFER_H_
+#ifndef MATHIC_LEX_SOURCE_BUFFER_H_
+#define MATHIC_LEX_SOURCE_BUFFER_H_
 
 #include "mathic/common/UniqueReference.h"
 
@@ -33,16 +33,16 @@ namespace Mathic
         unsigned int _lnFrwrd = 0;
         unsigned int _coFrwrd = 0;
 
-        bool _skipWS;
+        bool _skipWS = false;
 
     public:
-        inline SourceBuffer(llvm::MemoryBufferRef memBuf, bool skipWhiteSpaces = true) :
-            _name(memBuf.getBufferIdentifier().str().c_str()), _buffer(memBuf.getBufferStart()), _length(memBuf.getBufferSize()), _skipWS(skipWhiteSpaces)
+        inline SourceBuffer(llvm::MemoryBufferRef memBuf) :
+            _name(memBuf.getBufferIdentifier().str().c_str()), _buffer(memBuf.getBufferStart()), _length(memBuf.getBufferSize())
         {
         }
 
-        inline SourceBuffer(const char *const name, const char *const buffer, size_t length, bool skipWhiteSpaces = true) :
-            _name(name), _buffer(buffer), _length(length), _skipWS(skipWhiteSpaces)
+        inline SourceBuffer(const char *const name, const char *const buffer, size_t length) :
+            _name(name), _buffer(buffer), _length(length)
         {
         }
 
@@ -76,6 +76,11 @@ namespace Mathic
             return this->_name.get();
         }
 
+        inline size_t getBufferSize() const noexcept
+        {
+            return this->_length;
+        }
+
         inline unsigned int getLine() const noexcept
         {
             return this->_lnBegin;
@@ -85,7 +90,17 @@ namespace Mathic
         {
             return this->_coBegin;
         }
+
+        inline bool enableSkipWhiteSpaces() noexcept
+        {
+            return this->_skipWS = true;
+        }
+
+        inline bool isAtEOF() const noexcept
+        {
+            return this->_pFrwrd == this->_length;
+        }
     };
 }
 
-#endif // MATHIC_COMMON_SOURCE_BUFFER_H_
+#endif // MATHIC_LEX_SOURCE_BUFFER_H_

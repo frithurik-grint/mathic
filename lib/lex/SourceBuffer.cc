@@ -1,4 +1,4 @@
-#include "mathic/common/SourceBuffer.h"
+#include "mathic/lex/SourceBuffer.h"
 
 namespace Mathic
 {
@@ -14,7 +14,7 @@ namespace Mathic
         return c;
     }
 
-    char SourceBuffer::readChar(int offset) noexcept
+    char SourceBuffer::readChar(int offset) noexcept // besides read the character skips also whitespaces (if enbaled)
     {
         char c;
 
