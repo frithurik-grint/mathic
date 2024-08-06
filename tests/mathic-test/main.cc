@@ -14,5 +14,7 @@ int main()
         std::cout << (c = src.readChar());
     while (c);
 
+    std::cout << std::endl << src.getColumn() << std::endl;
+
     return 0;
 }

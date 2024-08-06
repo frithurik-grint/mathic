@@ -25,7 +25,7 @@ namespace Mathic
             else
                 c = NUL;
 
-            if ((c == NUL) || (c == EOL))
+            if (c == EOL)
                 ++this->_lnFrwrd, this->_coFrwrd = 0;
             else
                 ++this->_coFrwrd;
