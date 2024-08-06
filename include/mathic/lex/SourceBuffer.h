@@ -5,7 +5,7 @@
 #ifndef MATHIC_LEX_SOURCE_BUFFER_H_
 #define MATHIC_LEX_SOURCE_BUFFER_H_
 
-#include "mathic/common/UniqueReference.h"
+#include "mathic/common/ReferenceString.h"
 
 #include "llvm/Support/MemoryBuffer.h"
 #include "llvm/Support/MemoryBufferRef.h"
@@ -20,7 +20,7 @@ namespace Mathic
 
     class SourceBuffer
     {
-        UniqueReference<const char *> _name;
+        ReferenceString _name;
 
         const char *_buffer;
 
@@ -75,9 +75,9 @@ namespace Mathic
         }
 
         inline auto getName() const noexcept
-            -> const char *
+            -> std::string
         {
-            return this->_name.get();
+            return this->_name.getString();
         }
 
         inline auto getSize() const noexcept

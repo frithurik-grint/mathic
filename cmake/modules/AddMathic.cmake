@@ -29,7 +29,7 @@ function(add_mathic_library NAME SOURCES)
 		set(_LIB_TYPE)
 	endif()
 
-	add_library(${_LIB_NAME} ${_LIB_TYPE} ${SOURCES})
+	add_library(${_LIB_NAME} ${_LIB_TYPE} "${SOURCES}")
 
 	set_property(GLOBAL APPEND PROPERTY MATHIC_LIBRARIES  ${_LIB_NAME})
 	set_property(GLOBAL APPEND PROPERTY MATHIC_COMPONENTS ${_LIB_NAME})

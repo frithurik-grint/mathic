@@ -6,6 +6,7 @@
 #define MATHIC_COMMON_REFERENCE_H_
 
 #include <type_traits>
+#include <utility>
 
 namespace Mathic
 {
@@ -14,123 +15,157 @@ namespace Mathic
         T *_ptr = nullptr;
 
     protected:
-        inline Reference(const T *const value) :
+        constexpr Reference(std::add_const_t<T> *const value) :
             _ptr((std::remove_const_t<T> *)value)
         {
         }
 
-        inline Reference(T *const value) :
+        constexpr Reference(T *const value) :
             _ptr(value)
         {
         }
 
         // Methods
 
-        inline auto getPtr() const noexcept
+        constexpr auto getPtr() const noexcept
+            -> T *const
+        {
+            return this->_ptr;
+        }
+
+        constexpr auto setPtr(T *const value) noexcept
+            -> T *const
+        {
+            return this->_ptr = value;
+        }
+
+        constexpr auto movPtr() noexcept
+            -> T *const
+        {
+            return std::exchange<T *, std::nullptr_t>(this->_ptr, nullptr);
+        }
+
+        constexpr auto getConstPtr() const noexcept
             -> std::add_const_t<T> *const
         {
             return (std::add_const_t<T> *const)this->_ptr;
         }
 
-        inline auto setPtr(T *const value) noexcept
+        constexpr auto setConstPtr(std::add_const_t<T> *const value) noexcept
             -> std::add_const_t<T> *const
         {
-            return (std::add_const_t<T> *const)this->_ptr = value;
+            return this->_ptr = (T *const)value;
+        }
+
+        constexpr auto equals(const Reference<T> &that) const noexcept
+            -> bool
+        {
+            return (this->getConstPtr() == that.getConstPtr()) || ((!!(this->getConstPtr()) && !!(that.getConstPtr())) && (*this->getConstPtr() == *that.getConstPtr()));
         }
 
     public:
-        inline Reference(const T &value) :
-            _ptr((std::remove_const_t<T> *)&value)
+        constexpr Reference()
+            = default;
+
+        constexpr Reference(const Reference<T> &other) noexcept :
+            _ptr(other.getPtr())
         {
         }
 
-        inline Reference(T &value) :
+        constexpr Reference(Reference<T> &other) noexcept :
+            _ptr(other.getPtr())
+        {
+        }
+
+        constexpr Reference(Reference<T> &&other) noexcept :
+            _ptr(other.movPtr())
+        {
+        }
+
+        constexpr Reference(const T &value) noexcept :
+            _ptr((std::remove_const_t<T> *) &value)
+        {
+        }
+        
+        constexpr Reference(T &value) noexcept :
             _ptr(&value)
-        {
-        }
-
-        inline Reference(const Reference &other) :
-            _ptr(other._ptr)
-        {
-        }
-
-        inline Reference(Reference &other) :
-            _ptr(other._ptr)
         {
         }
 
         // Methods
 
-        inline auto get() const noexcept
-            -> T &
+        constexpr auto get() const noexcept
+            -> T &&
         {
-            return *this->_ptr;
+            return static_cast<std::remove_reference_t<T> &&>(*this->getPtr());
+        }
+
+        constexpr auto move() noexcept
+            -> Reference<T> &&
+        {
+            return static_cast<Reference<T> &&>(*this);
         }
 
         // Operators
 
-        inline auto operator=(const Reference &that)
-            -> Reference &
+        constexpr auto operator=(const Reference<T> &that) noexcept
+            -> Reference<T> &
         {
-            return this->_ptr = that->_ptr, *this;
+            return this->setPtr(that.getPtr()), *this;
         }
 
-        inline auto operator=(Reference &&that)
-            -> Reference &
+        constexpr auto operator=(Reference<T> &that) noexcept
+            -> Reference<T> &
         {
-            return this->_ptr = that->_ptr, *this;
+            return this->setPtr(that.getPtr()), *this;
         }
 
-        inline auto operator->() const noexcept
-            -> T &
+        constexpr auto operator=(Reference<T> &&that) noexcept
+            ->Reference<T> &
         {
-            return this->_ptr;
+            return this->setPtr(that.movPtr()), *this;
         }
 
-        inline auto operator*() const noexcept
-            -> T &
+        constexpr auto operator*() const noexcept
+            -> T &&
         {
-            return this->_ptr;
+            return this->get();
         }
 
-        inline auto operator==(std::add_const_t<T> &that) const noexcept
+        constexpr auto operator->() const noexcept
+            -> T &&
+        {
+            return this->get();
+        }
+
+        constexpr auto operator==(const Reference<T> &that) const noexcept
             -> bool
         {
-            return (this->_ptr == &that) || (*this->_ptr == that);
+            return this->equals(that);
         }
 
-        inline auto operator!=(std::add_const_t<T> &that) const noexcept
+        constexpr auto operator!=(const Reference<T> &that) const noexcept
             -> bool
         {
-            return (this->_ptr != &that) && (*this->_ptr != that);
+            return !(this == that);
         }
 
-        inline auto operator==(const Reference<T> &that) const noexcept
+        constexpr auto operator==(std::add_const_t<T> &that) const noexcept
             -> bool
         {
-            return (this->_ptr == that->_ptr) || (*this->_ptr == *that->_ptr);
+            return (this->getConstPtr() == &that) || (*this->getConstPtr() == that);
         }
 
-        inline auto operator!=(const Reference<T> &that) const noexcept
+        constexpr auto operator!=(std::add_const_t<T> &that) const noexcept
             -> bool
         {
-            return (this->_ptr != that->_ptr) && (*this->_ptr != *that->_ptr);
-        }
-
-        // Implicit Conversions
-
-        inline operator std::conditional_t<std::is_const_v<T>, T &, void>() const noexcept
-        {
-            if constexpr (std::is_const_v<T>)
-                return this->_ptr;
-            else
-                return;
+            return !(this == that);
         }
     };
 
     // Wrapper
 
-    template <typename T> static inline auto wrap(const T &value)
+    template <typename T> static inline auto wrap(std::add_const_t<T> &value)
         -> Reference<T> *
     {
         return new Reference<T>(value);

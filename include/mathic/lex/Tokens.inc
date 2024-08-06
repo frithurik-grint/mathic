@@ -35,7 +35,7 @@
 
 #ifndef _DefineTriviaToken
 /// @brief Internal macro for trivia tokens defintion.
-#   define _DefineTriviaToken(name, text) _DefineToken(name) _DefineLexeme(name, "<" text "/>", NULL)
+#   define _DefineTriviaToken(name, text) _DefineToken(name) _DefineLexeme(name, "<" text "/>", text)
 #endif // _DefineTriviaToken
 
 /// @brief EOF trivia token. (end of file)
@@ -55,7 +55,7 @@ _DefineTriviaToken(SPACE,                                       "wsp")
 
 #ifndef _DefineIdentsToken
 /// @brief Internal macro for identifier tokens defintion.
-#   define _DefineIdentsToken(name, text) _DefineToken(name) _DefineLexeme(name, "<" text ">%s<" text "/>", NULL)
+#   define _DefineIdentsToken(name, text) _DefineToken(name) _DefineLexeme(name, "<" text ">%s<" text "/>", text)
 #endif // _DefineIdentsToken
 
 /// @brief Identifier trivia token.

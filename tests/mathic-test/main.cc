@@ -8,5 +8,4 @@ using namespace Mathic;
 
 int main()
 {
-    
 }

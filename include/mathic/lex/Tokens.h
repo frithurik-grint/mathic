@@ -5,7 +5,9 @@
 #ifndef MATHIC_LEX_TOKENS_H_
 #define MATHIC_LEX_TOKENS_H_
 
-namespace Mathic
+#include "mathic/lex/SourceBuffer.h"
+
+namespace Mathic::Lex
 {
     enum TokenCode
     {
@@ -26,16 +28,15 @@ namespace Mathic
 #pragma pop_macro("_DefineToken")
     };
 
-    static auto getTokenToString(TokenCode &code)
+    auto getTokenToString(TokenCode code)
         -> const char *const;
 
-    static auto getTokenCodeName(TokenCode &code)
+    auto getTokenCodeName(TokenCode code)
         -> const char *const;
 
-    class Token
+    class Token // class to store token infos
     {
-        TokenCode code;
-
+        
     };
 }
 
