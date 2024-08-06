@@ -11,9 +11,9 @@ namespace Mathic
 {
     template <typename T> class Reference
     {
+    protected:
         T *_ptr = nullptr;
 
-    protected:
         inline Reference(const T *const value) :
             _ptr((std::remove_const_t<T> *)value)
         {
