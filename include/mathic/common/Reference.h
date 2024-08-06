@@ -11,9 +11,9 @@ namespace Mathic
 {
     template <typename T> class Reference
     {
-    protected:
         T *_ptr = nullptr;
 
+    protected:
         inline Reference(const T *const value) :
             _ptr((std::remove_const_t<T> *)value)
         {
@@ -26,14 +26,16 @@ namespace Mathic
 
         // Methods
 
-        inline T *const get_ptr() const noexcept
+        inline auto getPtr() const noexcept
+            -> std::add_const_t<T> *const
         {
-            return this->_ptr;
+            return (std::add_const_t<T> *const)this->_ptr;
         }
 
-        inline T *const set_ptr(T *const value) noexcept
+        inline auto setPtr(T *const value) noexcept
+            -> std::add_const_t<T> *const
         {
-            return this->_ptr = value;
+            return (std::add_const_t<T> *const)this->_ptr = value;
         }
 
     public:
@@ -59,49 +61,58 @@ namespace Mathic
 
         // Methods
 
-        inline T &get() const noexcept
+        inline auto get() const noexcept
+            -> T &
         {
             return *this->_ptr;
         }
 
         // Operators
 
-        inline Reference &operator=(const Reference &that)
+        inline auto operator=(const Reference &that)
+            -> Reference &
         {
             return this->_ptr = that->_ptr, *this;
         }
 
-        inline Reference &operator=(Reference &&that)
+        inline auto operator=(Reference &&that)
+            -> Reference &
         {
             return this->_ptr = that->_ptr, *this;
         }
 
-        inline T &operator->() const noexcept
+        inline auto operator->() const noexcept
+            -> T &
         {
             return this->_ptr;
         }
 
-        inline T &operator*() const noexcept
+        inline auto operator*() const noexcept
+            -> T &
         {
             return this->_ptr;
         }
 
-        inline bool operator==(std::add_const_t<T> &that) const noexcept
+        inline auto operator==(std::add_const_t<T> &that) const noexcept
+            -> bool
         {
             return (this->_ptr == &that) || (*this->_ptr == that);
         }
 
-        inline bool operator!=(std::add_const_t<T> &that) const noexcept
+        inline auto operator!=(std::add_const_t<T> &that) const noexcept
+            -> bool
         {
             return (this->_ptr != &that) && (*this->_ptr != that);
         }
 
-        inline bool operator==(const Reference<T> &that) const noexcept
+        inline auto operator==(const Reference<T> &that) const noexcept
+            -> bool
         {
             return (this->_ptr == that->_ptr) || (*this->_ptr == *that->_ptr);
         }
 
-        inline bool operator!=(const Reference<T> &that)
+        inline auto operator!=(const Reference<T> &that) const noexcept
+            -> bool
         {
             return (this->_ptr != that->_ptr) && (*this->_ptr != *that->_ptr);
         }
@@ -119,19 +130,22 @@ namespace Mathic
 
     // Wrapper
 
-    template <typename T> static inline Reference<T> *wrap(const T &value)
+    template <typename T> static inline auto wrap(const T &value)
+        -> Reference<T> *
     {
         return new Reference<T>(value);
     }
 
-    template <typename T> inline Reference<T> *wrap(T &value)
+    template <typename T> static inline auto wrap(T &value)
+        -> Reference<T> *
     {
         return new Reference<T>(value);
     }
 
     // Unwrapper
 
-    template <typename T> static inline T &unwrap(Reference<T> *const ref, bool deleteIt = true)
+    template <typename T> static inline auto unwrap(Reference<T> *const ref, bool deleteIt = true)
+        -> T &
     {
         T &result = ref->get();
 

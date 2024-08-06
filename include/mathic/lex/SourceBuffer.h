@@ -48,8 +48,11 @@ namespace Mathic
 
         // Methods
 
-        char peekChar(int offset = 0) const noexcept;
-        char readChar(int offset = 0) noexcept;
+        auto peekChar(int offset = 0) const noexcept
+            -> char;
+
+        auto readChar(int offset = 0) noexcept
+            -> char;
 
         inline void advancePosition() noexcept
         {
@@ -71,32 +74,38 @@ namespace Mathic
             return;
         }
 
-        inline const char *getName() const noexcept
+        inline auto getName() const noexcept
+            -> const char *
         {
             return this->_name.get();
         }
 
-        inline size_t getBufferSize() const noexcept
+        inline auto getSize() const noexcept
+            -> std::size_t
         {
             return this->_length;
         }
 
-        inline unsigned int getLine() const noexcept
+        inline auto getLine() const noexcept
+            -> unsigned int
         {
             return this->_lnBegin;
         }
 
-        inline unsigned int getColumn() const noexcept
+        inline auto getColumn() const noexcept
+            -> unsigned int
         {
             return this->_coBegin;
         }
 
-        inline bool enableSkipWhiteSpaces() noexcept
+        inline auto enableSkipWhiteSpaces() noexcept
+            -> bool
         {
             return this->_skipWS = true;
         }
 
-        inline bool isAtEOF() const noexcept
+        inline auto isAtEOF() const noexcept
+            -> bool
         {
             return this->_pFrwrd == this->_length;
         }

@@ -2,7 +2,8 @@
 
 namespace Mathic
 {
-    char SourceBuffer::peekChar(int offset) const noexcept
+    auto SourceBuffer::peekChar(int offset) const noexcept
+        -> char
     {
         char c;
 
@@ -14,7 +15,8 @@ namespace Mathic
         return c;
     }
 
-    char SourceBuffer::readChar(int offset) noexcept // besides read the character skips also whitespaces (if enbaled)
+    auto SourceBuffer::readChar(int offset) noexcept // besides read the character skips also whitespaces (if enbaled)
+        -> char
     {
         char c;
 

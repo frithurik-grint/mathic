@@ -24,38 +24,42 @@ namespace Mathic
         }
 
         inline UniqueReference(const UniqueReference &other) :
-            Reference<T>(other.get_ptr())
+            Reference<T>(other.getPtr())
         {
-            other.set_ptr(nullptr);
+            other.setPtr(nullptr);
         }
 
         inline UniqueReference(UniqueReference &other) :
-            Reference<T>(other.get_ptr())
+            Reference<T>(other.getPtr())
         {
-            other.set_ptr(nullptr);
+            other.setPtr(nullptr);
         }
 
         // Operators
 
-        inline UniqueReference &operator=(const UniqueReference &that)
+        inline auto &operator=(const UniqueReference &that)
+            -> UniqueReference
         {
-            return this->set_ptr(that->get_ptr()), that->set_ptr(nullptr), *this;
+            return this->setPtr(that->getPtr()), that->setPtr(nullptr), *this;
         }
 
-        inline UniqueReference &operator=(UniqueReference &&that)
+        inline auto &operator=(UniqueReference &&that)
+            -> UniqueReference
         {
-            return this->set_ptr(that->get_ptr()), that->set_ptr(nullptr), *this;
+            return this->setPtr(that->getPtr()), that->setPtr(nullptr), *this;
         }
     };
 
     // Wrapper
 
-    template <typename T> UniqueReference<T> *wrap_unique(const T &value)
+    template <typename T> auto wrap_unique(const T &value)
+        -> UniqueReference<T>
     {
         return new UniqueReference<T>(value);
     }
 
-    template <typename T> UniqueReference<T> *wrap_unique(T &value)
+    template <typename T> auto wrap_unique(T &value)
+        -> UniqueReference<T> *
     {
         return new UniqueReference<T>(value);
     }

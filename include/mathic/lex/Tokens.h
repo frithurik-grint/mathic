@@ -26,8 +26,17 @@ namespace Mathic
 #pragma pop_macro("_DefineToken")
     };
 
-    static const char *const getTokenToString(TokenCode &code);
-    static const char *const getTokenCodeName(TokenCode &code);
+    static auto getTokenToString(TokenCode &code)
+        -> const char *const;
+
+    static auto getTokenCodeName(TokenCode &code)
+        -> const char *const;
+
+    class Token
+    {
+        TokenCode code;
+
+    };
 }
 
 #endif // MATHIC_LEX_TOKENS_H_
